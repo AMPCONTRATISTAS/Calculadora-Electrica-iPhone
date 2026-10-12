@@ -1,64 +1,48 @@
 
-const CACHE_NAME = 'calculadora-electrica-v1';
+const CACHE_NAME = "calculadora-electrica-v2";
 
 const ARCHIVOS = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './icon-192.png',
-  './icon-512.png'
+  "./",
+  "./index.html",
+  "./manifest.webmanifest",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./vendor/xlsx.full.min.js"
 ];
 
-self.addEventListener('install', (event) => {
+// Guardar los archivos para funcionar sin internet.
+self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
-      await cache.addAll([
-        './',
-        './index.html',
-        './manifest.webmanifest'
-      ]);
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ARCHIVOS);
+    }).then(() => self.skipWaiting())
+  );
+});
 
-      await Promise.all(
-        ['./icon-192.png', './icon-512.png'].map(
-          async (archivo) => {
-            try {
-              await cache.add(archivo);
-            } catch (error) {
-              console.warn('Archivo opcional:', archivo);
-            }
-          }
-        )
+// Eliminar versiones anteriores.
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((nombres) => {
+      return Promise.all(
+        nombres
+          .filter((nombre) => nombre !== CACHE_NAME)
+          .map((nombre) => caches.delete(nombre))
       );
-    })
+    }).then(() => self.clients.claim())
   );
-
-  self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
-      )
-    )
-  );
+// Usar archivos guardados cuando no haya internet.
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
 
-  self.clients.claim();
-});
+  const url = new URL(event.request.url);
 
-self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
-
-  if (new URL(event.request.url).origin !== self.location.origin) {
-    return;
-  }
+  if (url.origin !== self.location.origin) return;
 
   event.respondWith(
-    caches.match(event.request).then(
-      (respuesta) => respuesta || fetch(event.request)
-    )
+    caches.match(event.request).then((respuesta) => {
+      return respuesta || fetch(event.request);
+    })
   );
 });
