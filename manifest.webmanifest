@@ -1,25 +1,15 @@
-
 {
   "name": "Calculadora Eléctrica",
-  "short_name": "Calculadora",
-  "description": "Calculadora eléctrica para uso sin internet",
+  "short_name": "Calc Eléctrica",
+  "description": "Calculadora eléctrica y levantamiento de tableros Red Line",
   "lang": "es-MX",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#15191d",
   "theme_color": "#15191d",
-  "orientation": "any",
   "icons": [
-    {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ]
 }
