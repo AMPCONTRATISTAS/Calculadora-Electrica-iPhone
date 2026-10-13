@@ -1,4 +1,4 @@
-const CACHE_NAME = 'calculadora-electrica-redline-final-v1';
+const CACHE_NAME = 'calculadora-electrica-charola-v4-bgbl';
 const APP_FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES)).then(() => self.skipWaiting()));
